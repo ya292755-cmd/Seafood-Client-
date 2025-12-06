@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1E3A8A">
+    <meta name="description" content="Seafood Business Management System">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦐</text></svg>">
+    <title>Seafood Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F8FAFC;
+            color: #1E293B;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            background: white;
+            color: #64748B;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1E3A8A;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .announcement-banner {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .announcement-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .announcement-content {
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .schedule-card, .target-card {
+            color: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .schedule-card {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schedule-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .target-card {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .target-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .schedule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .schedule-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .schedule-time {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1.5rem 0;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: scaleIn 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .schedule-label {
+            text-align: center;
+            opacity: 0.95;
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .schedule-info {
+            margin-top: 1.5rem;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.25);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .work-hours-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .current-time-display {
+            margin-top: 1rem;
+            font-size: 1rem;
+            padding: 0.75rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .target-item {
+            background: rgba(255,255,255,0.25);
+            padding: 2rem 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .target-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .target-item:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.25);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .target-item:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .target-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .target-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .target-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0.75rem 0;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 2;
+            animation: countUp 1s ease-out;
+        }
+
+        @keyframes countUp {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .target-unit {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.95;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 0.75rem 0;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            animation: numberPop 0.6s ease-out;
+        }
+
+        @keyframes numberPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-display-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border: 2px solid #E2E8F0;
+            transition: all 0.3s;
+        }
+
+        .order-display-card:hover {
+            border-color: #3B82F6;
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .order-id {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #1E3A8A;
+        }
+
+        .order-customer {
+            font-size: 0.9rem;
+            color: #64748B;
+        }
+
+        .order-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+
+        .info-value {
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-cleaning { background: #FEF3C7; color: #92400E; }
+        .status-packed { background: #DBEAFE; color: #1E40AF; }
+        .status-delivering { background: #E0E7FF; color: #4338CA; }
+        .status-completed { background: #D1FAE5; color: #065F46; }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            color: white;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.875rem 1rem;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3B82F6;
+        }
+
+        select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: white;
+            font-weight: 500;
+        }
+
+        .attendance-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #F8FAFC;
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .attendance-entry:hover {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .attendance-name {
+            font-weight: 600;
+            color: #1E293B;
+        }
+
+        .attendance-time {
+            font-size: 0.875rem;
+            color: #64748B;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748B;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .install-prompt {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .target-grid { grid-template-columns: 1fr; }
+            .order-info { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🦐 Seafood Manager</div>
+            <div class="user-badge">👤 User</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Install Prompt -->
+        <div id="installPrompt" class="install-prompt hidden">
+            <div>
+                <strong>📱 Install App</strong>
+                <div style="font-size: 0.875rem; opacity: 0.95;">Add to home screen for better experience</div>
+            </div>
+            <button class="btn btn-primary" onclick="installPWA()" style="padding: 0.5rem 1rem;">Install</button>
+        </div>
+
+        <div id="announcementBanner"></div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-page="dashboard">📊 Dashboard</button>
+            <button class="nav-tab" data-page="schedule">⏰ Schedule</button>
+            <button class="nav-tab" data-page="targets">🎯 Targets</button>
+            <button class="nav-tab" data-page="orders">📦 Orders</button>
+            <button class="nav-tab" data-page="attendance">📋 Attendance</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboardPage" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-label">Today's Attendance</div>
+                    <div class="stat-value" id="todayAttendance">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-label">Active Orders</div>
+                    <div class="stat-value" id="activeOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-label">Completed Today</div>
+                    <div class="stat-value" id="completedOrders">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">⚡ Quick Actions</div>
+                <div class="action-buttons">
+                    <button class="btn btn-success btn-full" data-goto="attendance">✓ Check In / Check Out</button>
+                    <button class="btn btn-primary btn-full" data-goto="orders">📦 View My Orders</button>
+                    <button class="btn btn-primary btn-full" data-goto="schedule">⏰ View Schedule</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule -->
+        <div id="schedulePage" class="page-content hidden">
+            <div class="schedule-card">
+                <div class="schedule-header">
+                    <div class="schedule-title">📅 Work Schedule</div>
+                    <div style="font-size: 0.9rem;" id="currentDate"></div>
+                </div>
+                
+                <div class="schedule-time" id="workStartTime">08:00 AM</div>
+                <div class="schedule-label">🕐 အလုပ်ဝင်ချိန်</div>
+
+                <div class="schedule-info">
+                    <div style="font-size: 0.95rem; opacity: 0.95; margin-bottom: 0.75rem;">📍 Work Hours</div>
+                    <div class="work-hours-display" id="workHoursDisplay">8:00 AM - 5:00 PM</div>
+                    <div class="current-time-display">
+                        ⏰ Current: <strong id="currentTime"></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Targets -->
+        <div id="targetsPage" class="page-content hidden">
+            <div class="target-card">
+                <div class="schedule-header">
+                    <div class="schedule-title">🎯 Daily Targets</div>
+                    <div style="font-size: 0.9rem;">Today's Goal</div>
+                </div>
+
+                <div class="target-grid">
+                    <div class="target-item">
+                        <div class="target-icon">🦐</div>
+                        <div class="target-label">ကင်းမွန်</div>
+                        <div class="target-value" id="shrimpTarget">100</div>
+                        <div class="target-unit">အလုံး</div>
+                    </div>
+                    <div class="target-item">
+                        <div class="target-icon">🦑</div>
+                        <div class="target-label">ပုဇွန်</div>
+                        <div class="target-value" id="squidTarget">50</div>
+                        <div class="target-unit">အလုံး</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.2); border-radius: 12px; text-align: center; position: relative; z-index: 1;">
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">💪 Progress Status</div>
+                    <div style="font-size: 1.2rem; font-weight: bold;">Keep Going! 🚀</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders -->
+        <div id="ordersPage" class="page-content hidden">
+            <div class="card">
+                <div class="card-title">📦 Seafood Orders</div>
+                
+                <div class="search-bar">
+                    <input type="text" class="search-input" id="searchOrders" placeholder="🔍 Search orders..." onkeyup="filterOrders()">
+                    <select class="search-input" style="flex: 0.5;" id="statusFilter" onchange="filterOrders()">
+                        <option value="">All Status</option>
+                        <option value="cleaning">Cleaning</option>
+                        <option value="packed">Packed</option>
+                        <option value="delivering">Delivering</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="ordersContainer" class="loading">Loading orders...</div>
+        </div>
+
+        <!-- Attendance -->
+        <div id="attendancePage" class="page-content hidden">
+            <div class="card">
+                <div class="card-title">⏰ My Attendance</div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-success btn-full" onclick="checkIn()">✓ Check In</button>
+                    <button class="btn btn-danger btn-full" onclick="checkOut()">✗ Check Out</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📋 My Records (Last 7 Days)</div>
+                <div id="attendanceContainer" class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit, onSnapshot } 
+            from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ncNhlETbAgB5uFbEiXRON-3vhfneEV0",
+            authDomain: "seafood-oder.firebaseapp.com",
+            projectId: "seafood-oder",
+            storageBucket: "seafood-oder.firebasestorage.app",
+            messagingSenderId: "428949391732",
+            appId: "1:428949391732:web:908e851d89aff17365c421",
+            measurementId: "G-GNP9K51MCY"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+        window.firestore = { collection, addDoc, getDocs, query, where, orderBy, limit, onSnapshot };
+        
+        console.log("✅ Firebase connected!");
+        window.dispatchEvent(new Event('firebaseReady'));
+    </script>
+
+    <script>
+        // PWA Install
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.remove('hidden');
+        });
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installed');
+                    }
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.add('hidden');
+                });
+            }
+        }
+
+        // Global state
+        let workStartTime = "08:00";
+        let workEndTime = "17:00";
+        let shrimpTarget = 100;
+        let squidTarget = 50;
+        let allOrders = [];
+
+        function init() {
+            updateCurrentTime();
+            updateCurrentDate();
+            setInterval(updateCurrentTime, 1000);
+            setInterval(checkWorkTimeNotification, 60000);
+            setupNavigation();
+            setupQuickActions();
+        }
+
+        window.addEventListener('firebaseReady', () => {
+            loadAllData();
+            setupRealtimeListeners();
+        });
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    showPage(page);
+                });
+            });
+        }
+
+        function setupQuickActions() {
+            document.querySelectorAll('[data-goto]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const page = this.getAttribute('data-goto');
+                    showPage(page);
+                });
+            });
+        }
+
+        async function loadAllData() {
+            try {
+                await loadSchedule();
+                await loadTargets();
+                await loadOrders();
+                await loadAttendance();
+                await updateStats();
+            } catch (error) {
+                console.error("Error loading data:", error);
+            }
+        }
+
+        function setupRealtimeListeners() {
+            const { collection, onSnapshot } = window.firestore;
+            
+            onSnapshot(collection(window.db, 'orders'), () => {
+                loadOrders();
+                updateStats();
+            });
+            
+            onSnapshot(collection(window.db, 'attendance'), () => {
+                loadAttendance();
+                updateStats();
+            });
+        }
+
+        async function loadSchedule() {
+            try {
+                const { collection, getDocs, query, orderBy, limit } = window.firestore;
+                const scheduleSnapshot = await getDocs(
+                    query(collection(window.db, 'workSchedules'), orderBy('createdAt', 'desc'), limit(1))
+                );
+                
+                if (!scheduleSnapshot.empty) {
+                    const data = scheduleSnapshot.docs[0].data();
+                    workStartTime = data.startTime;
+                    workEndTime = data.endTime;
+                    updateScheduleDisplay();
+                }
+            } catch (error) {
+                console.error("Error loading schedule:", error);
+            }
+        }
+
+        async function loadTargets() {
+            try {
+                const { collection, getDocs, query, orderBy, limit } = window.firestore;
+                const targetsSnapshot = await getDocs(
+                    query(collection(window.db, 'dailyTargets'), orderBy('createdAt', 'desc'), limit(1))
+                );
+                
+                if (!targetsSnapshot.empty) {
+                    const data = targetsSnapshot.docs[0].data();
+                    shrimpTarget = data.shrimp;
+                    squidTarget = data.squid;
+                    document.getElementById('shrimpTarget').textContent = shrimpTarget;
+                    document.getElementById('squidTarget').textContent = squidTarget;
+                }
+            } catch (error) {
+                console.error("Error loading targets:", error);
+            }
+        }
+
+        async function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            if (!container) return;
+
+            try {
+                const { collection, getDocs, query, orderBy } = window.firestore;
+                const ordersSnapshot = await getDocs(
+                    query(collection(window.db, 'orders'), orderBy('createdAt', 'desc'))
+                );
+
+                allOrders = [];
+                ordersSnapshot.forEach((doc) => {
+                    allOrders.push({ id: doc.id, ...doc.data() });
+                });
+
+                displayOrders(allOrders);
+            } catch (error) {
+                console.error("Error loading orders:", error);
+                container.innerHTML = '<div class="loading">Error loading orders</div>';
+            }
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('ordersContainer');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="loading">No orders yet</div>';
+                return;
+            }
+
+            let html = '';
+            orders.forEach((order) => {
+                const statusClass = `status-${order.status}`;
+                const itemEmoji = order.item === 'shrimp' ? '🦐' : '🦑';
+                const itemName = order.item === 'shrimp' ? 'ကင်းမွန်' : 'ပုဇွန်';
+                const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '--';
+                const time = order.createdAt ? new Date(order.createdAt).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'}) : '--';
+
+                html += `
+                    <div class="order-display-card">
+                        <div class="order-header">
+                            <div>
+                                <div class="order-id">${order.orderNumber || 'N/A'}</div>
+                                <div class="order-customer">Customer: ${order.customer}</div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${order.status}</span>
+                        </div>
+                        
+                        <div class="order-info">
+                            <div>
+                                <div class="info-label">Item</div>
+                                <div class="info-value">${itemEmoji} ${itemName} ${order.quantity} အလုံး</div>
+                            </div>
+                            <div>
+                                <div class="info-label">Date</div>
+                                <div class="info-value">${date}</div>
+                            </div>
+                            <div>
+                                <div class="info-label">Time</div>
+                                <div class="info-value">${time}</div>
+                            </div>
+                            <div>
+                                <div class="info-label">Assigned To</div>
+                                <div class="info-value">${order.assignedTo || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function filterOrders() {
+            const searchText = document.getElementById('searchOrders').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            let filtered = allOrders.filter(order => {
+                const matchSearch = order.customer.toLowerCase().includes(searchText) || 
+                                  (order.orderNumber && order.orderNumber.toLowerCase().includes(searchText));
+                const matchStatus = !statusFilter || order.status === statusFilter;
+                return matchSearch && matchStatus;
+            });
+
+            displayOrders(filtered);
+        }
+
+        async function loadAttendance() {
+            const container = document.getElementById('attendanceContainer');
+            if (!container) return;
+
+            try {
+                const { collection, getDocs, query, orderBy, limit } = window.firestore;
+                
+                const attendanceSnapshot = await getDocs(
+                    query(collection(window.db, 'attendance'), orderBy('createdAt', 'desc'), limit(7))
+                );
+
+                if (attendanceSnapshot.empty) {
+                    container.innerHTML = '<div class="loading">No attendance records</div>';
+                    return;
+                }
+
+                let html = '';
+                attendanceSnapshot.forEach((doc) => {
+                    const att = doc.data();
+                    const checkIn = att.checkIn ? new Date(att.checkIn).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'}) : '--:--';
+                    const checkOut = att.checkOut ? new Date(att.checkOut).toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'}) : '--:--';
+                    const date = att.date ? new Date(att.date).toLocaleDateString() : '--';
+
+                    html += `
+                        <div class="attendance-entry">
+                            <div style="flex: 1;">
+                                <div class="attendance-name">${att.staffName} - ${date}</div>
+                                <div class="attendance-time">In: ${checkIn} | Out: ${checkOut}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            } catch (error) {
+                console.error("Error loading attendance:", error);
+                container.innerHTML = '<div class="loading">Error loading attendance</div>';
+            }
+        }
+
+        async function updateStats() {
+            try {
+                const { collection, getDocs, query, where } = window.firestore;
+                const today = new Date().toISOString().split('T')[0];
+                
+                // Attendance
+                const attSnapshot = await getDocs(
+                    query(collection(window.db, 'attendance'), where('date', '==', today))
+                );
+                document.getElementById('todayAttendance').textContent = attSnapshot.size;
+
+                // Orders
+                const ordersSnapshot = await getDocs(collection(window.db, 'orders'));
+                const activeCount = ordersSnapshot.docs.filter(doc => 
+                    doc.data().status !== 'completed'
+                ).length;
+                const completedCount = ordersSnapshot.docs.filter(doc => 
+                    doc.data().status === 'completed'
+                ).length;
+                
+                document.getElementById('activeOrders').textContent = activeCount;
+                document.getElementById('completedOrders').textContent = completedCount;
+            } catch (error) {
+                console.error("Error updating stats:", error);
+            }
+        }
+
+        async function checkIn() {
+            const staffName = prompt('Enter your name:');
+            if (!staffName || staffName.trim() === '') {
+                alert('❌ Name is required!');
+                return;
+            }
+
+            try {
+                const { collection, addDoc } = window.firestore;
+                await addDoc(collection(window.db, 'attendance'), {
+                    staffName: staffName.trim(),
+                    checkIn: new Date().toISOString(),
+                    checkOut: null,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'present',
+                    createdAt: new Date().toISOString()
+                });
+                
+                alert(`✅ Check In Successful!\n\n${staffName}\nTime: ${new Date().toLocaleTimeString()}`);
+                loadAttendance();
+                updateStats();
+            } catch (error) {
+                console.error("Error:", error);
+                alert('❌ Error during check-in: ' + error.message);
+            }
+        }
+
+        async function checkOut() {
+            alert('ℹ️ Check-out feature:\n\nContact your supervisor to update check-out time.');
+        }
+
+        function updateScheduleDisplay() {
+            const startElem = document.getElementById('workStartTime');
+            const hoursElem = document.getElementById('workHoursDisplay');
+            
+            if (startElem) startElem.textContent = formatTime(workStartTime);
+            if (hoursElem) hoursElem.textContent = `${formatTime(workStartTime)} - ${formatTime(workEndTime)}`;
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            });
+            const elem = document.getElementById('currentTime');
+            if (elem) elem.textContent = time;
+        }
+
+        function updateCurrentDate() {
+            const now = new Date();
+            const date = now.toLocaleDateString('en-US', { 
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            const elem = document.getElementById('currentDate');
+            if (elem) elem.textContent = date;
+        }
+
+        function formatTime(time) {
+            const [hours, minutes] = time.split(':');
+            const h = parseInt(hours);
+            const ampm = h >= 12 ? 'PM' : 'AM';
+            const displayHour = h % 12 || 12;
+            return `${displayHour}:${minutes} ${ampm}`;
+        }
+
+        function checkWorkTimeNotification() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const workHour = parseInt(workStartTime.split(':')[0]);
+            const workMinute = parseInt(workStartTime.split(':')[1]);
+
+            if (hours === workHour && minutes === workMinute) {
+                if (Notification.permission === "granted") {
+                    new Notification("🔔 Work Time!", {
+                        body: `Work starts at ${formatTime(workStartTime)}. Please check in!`,
+                        icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦐</text></svg>"
+                    });
+                }
+            }
+        }
+
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show selected page
+            const targetPage = document.getElementById(pageName + 'Page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+            }
+            
+            // Update nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-page') === pageName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Reload data
+            if (pageName === 'orders') loadOrders();
+            if (pageName === 'attendance') loadAttendance();
+        }
+
+        // Request notification permission
+        if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
