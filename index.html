@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#10B981">
+    <title>Seafood Manager - User</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.15);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #10B981;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748B;
+            margin-top: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: white;
+            color: #10B981;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #10B981;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-item {
+            background: #F0FDF4;
+            border: 2px solid #DCFCE7;
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: #10B981;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-cleaning { background: #FEF3C7; color: #92400E; }
+        .status-packed { background: #DBEAFE; color: #1E40AF; }
+        .status-delivering { background: #E0E7FF; color: #4338CA; }
+        .status-completed { background: #D1FAE5; color: #065F46; }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #64748B;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #10B981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .info-box {
+            background: #F0FDF4;
+            border-left: 4px solid #10B981;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            color: #065F46;
+        }
+
+        .schedule-box {
+            background: #F0FDF4;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .schedule-label {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .schedule-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #10B981;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">👤 Seafood </div>
+            <div class="header-subtitle">📊 Live Data Viewer (Read-Only)</div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">📦 Total Orders</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="activeOrders">0</div>
+                <div class="stat-label">🔥 Active</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="completed">0</div>
+                <div class="stat-label">✅ Completed</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('orders')">📦 Orders</button>
+            <button class="tab" onclick="switchTab('schedule')">⏰ Schedule</button>
+            <button class="tab" onclick="switchTab('targets')">🎯 Targets</button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content active">
+            <div class="info-box">
+                ℹ️ View all active orders. Auto-refresh every 3 seconds.
+            </div>
+
+            <div class="card">
+                <div class="card-title">📦 Active Orders</div>
+                <div id="ordersContainer" class="loading">Loading orders...</div>
+                <button class="btn" onclick="loadOrders()">🔄 Refresh Now</button>
+            </div>
+        </div>
+
+        <!-- Schedule Tab -->
+        <div id="schedule" class="tab-content">
+            <div class="info-box">
+                ℹ️ Current work schedule.
+            </div>
+
+            <div class="card">
+                <div class="card-title">⏰ Work Schedule</div>
+                <div id="scheduleContainer" class="loading">Loading schedule...</div>
+                <button class="btn" onclick="loadSchedule()">🔄 Refresh</button>
+            </div>
+        </div>
+
+        <!-- Targets Tab -->
+        <div id="targets" class="tab-content">
+            <div class="info-box">
+                ℹ️ Daily production targets.
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Daily Targets</div>
+                <div id="targetsContainer" class="loading">Loading targets...</div>
+                <button class="btn" onclick="loadTargets()">🔄 Refresh</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== UTILITY ==========
+        function switchTab(name) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // ========== READ ONLY ==========
+        function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="loading">No orders</div>';
+                return;
+            }
+
+            let html = '';
+            orders.forEach(order => {
+                const itemEmoji = order.item === 'shrimp' ? '🦐' : '🦑';
+                const itemName = order.item === 'shrimp' ? 'ကင်းမွန်' : 'ပုဇွန်';
+
+                html += `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div class="order-id">#${order.id}</div>
+                            <span class="status-badge status-${order.status}">${order.status}</span>
+                        </div>
+                        <div>
+                            <strong>Customer:</strong> ${order.customer}<br>
+                            <strong>Item:</strong> ${itemEmoji} ${itemName} × ${order.quantity}<br>
+                            <strong>Created:</strong> ${order.createdAt}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            updateStats();
+        }
+
+        function loadSchedule() {
+            const container = document.getElementById('scheduleContainer');
+            const schedule = JSON.parse(localStorage.getItem('schedule') || 'null');
+
+            if (!schedule) {
+                container.innerHTML = '<div class="loading">No schedule set</div>';
+                return;
+            }
+
+            const html = `
+                <div class="schedule-box">
+                    <div class="schedule-label">📍 Start Time</div>
+                    <div class="schedule-value">${schedule.start}</div>
+                </div>
+                <div class="schedule-box">
+                    <div class="schedule-label">🏁 End Time</div>
+                    <div class="schedule-value">${schedule.end}</div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function loadTargets() {
+            const container = document.getElementById('targetsContainer');
+            const targets = JSON.parse(localStorage.getItem('targets') || 'null');
+
+            if (!targets) {
+                container.innerHTML = '<div class="loading">No targets set</div>';
+                return;
+            }
+
+            const html = `
+                <div class="schedule-box">
+                    <div class="schedule-label">🦐 ပုဇွန်  Target</div>
+                    <div class="schedule-value">${targets.shrimp} pieces</div>
+                </div>
+                <div class="schedule-box">
+                    <div class="schedule-label">🦑 ကင်းမွန် Target</div>
+                    <div class="schedule-value">${targets.squid} pieces</div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function updateStats() {
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const active = orders.filter(o => o.status !== 'completed').length;
+            const comp = orders.filter(o => o.status === 'completed').length;
+
+            document.getElementById('totalOrders').textContent = orders.length;
+            document.getElementById('activeOrders').textContent = active;
+            document.getElementById('completed').textContent = comp;
+        }
+
+        // Initialize
+        loadOrders();
+        loadSchedule();
+        loadTargets();
+        updateStats();
+
+        // Auto-refresh
+        setInterval(loadOrders, 3000);
+        setInterval(updateStats, 3000);
+    </script>
+</body>
+</html>
