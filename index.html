@@ -4,203 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#10B981">
-    <title>Seafood Manager - User</title>
+    <title>Seafood Oder- User</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-            min-height: 100vh;
-            padding: 1rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: rgba(255,255,255,0.15);
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: white;
-        }
-
-        .header-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-
-        .header-subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-top: 0.5rem;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-box {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 15px;
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #10B981;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: #64748B;
-            margin-top: 0.5rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-        }
-
-        .tab {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .tab.active {
-            background: white;
-            color: #10B981;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #10B981;
-            margin-bottom: 1.5rem;
-        }
-
-        .order-item {
-            background: #F0FDF4;
-            border: 2px solid #DCFCE7;
-            border-radius: 10px;
-            padding: 1.2rem;
-            margin-bottom: 1rem;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-
-        .order-id {
-            font-weight: 700;
-            color: #10B981;
-        }
-
-        .status-badge {
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
+        /* (index.html မှာပါတဲ့ မူရင်း CSS အားလုံးကို ဤနေရာတွင် ထည့်သွင်းပါ) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #10B981 0%, #059669 100%); min-height: 100vh; padding: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: rgba(255,255,255,0.15); border-radius: 20px; padding: 1.5rem; margin-bottom: 1.5rem; color: white; }
+        .header-title { font-size: 1.8rem; font-weight: bold; }
+        .header-subtitle { font-size: 0.9rem; opacity: 0.9; margin-top: 0.5rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-box { background: white; padding: 1.5rem; border-radius: 15px; text-align: center; }
+        .stat-number { font-size: 2.5rem; font-weight: bold; color: #10B981; }
+        .stat-label { font-size: 0.85rem; color: #64748B; margin-top: 0.5rem; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; overflow-x: auto; }
+        .tab { padding: 0.75rem 1.5rem; border: none; background: rgba(255,255,255,0.2); color: white; border-radius: 10px; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .tab.active { background: white; color: #10B981; }
+        .card { background: white; border-radius: 15px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .card-title { font-size: 1.3rem; font-weight: bold; color: #10B981; margin-bottom: 1.5rem; }
+        .order-item { background: #F0FDF4; border: 2px solid #DCFCE7; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .order-id { font-weight: 700; color: #10B981; }
+        .status-badge { padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
         .status-cleaning { background: #FEF3C7; color: #92400E; }
         .status-packed { background: #DBEAFE; color: #1E40AF; }
         .status-delivering { background: #E0E7FF; color: #4338CA; }
         .status-completed { background: #D1FAE5; color: #065F46; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .loading { text-align: center; padding: 2rem; color: #64748B; }
+        .btn { padding: 0.75rem 1.5rem; background: #10B981; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; margin-top: 1rem; }
+        .info-box { background: #F0FDF4; border-left: 4px solid #10B981; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; color: #065F46; }
+        .schedule-box { background: #F0FDF4; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        .schedule-label { color: #64748B; font-size: 0.9rem; margin-bottom: 0.3rem; }
+        .schedule-value { font-size: 1.3rem; font-weight: bold; color: #10B981; }
+        /* Records အတွက် CSS အသစ်များ */
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #1E293B; }
+        .input-group input, .input-group select { width: 100%; padding: 0.8rem; border: 2px solid #E2E8F0; border-radius: 10px; font-size: 1rem; }
+        .record-item { background: #F8FAFC; border: 2px solid #E2E8F0; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+        .record-actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+        .btn-update { background: #22C55E; }
+        .btn-delete { background: #EF4444; }
 
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #64748B;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            background: #10B981;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .info-box {
-            background: #F0FDF4;
-            border-left: 4px solid #10B981;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            color: #065F46;
-        }
-
-        .schedule-box {
-            background: #F0FDF4;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .schedule-label {
-            color: #64748B;
-            font-size: 0.9rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .schedule-value {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #10B981;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
-            <div class="header-title">👤 Seafood </div>
-            <div class="header-subtitle">📊 Live Data Viewer (Read-Only)</div>
+            <div class="header-title">👤 Seafood Oder</div>
+            <div class="header-subtitle">📊 Live Data Viewer (Read/Write on Records)</div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-box">
                 <div class="stat-number" id="totalOrders">0</div>
@@ -216,27 +71,24 @@
             </div>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab active" onclick="switchTab('orders')">📦 Orders</button>
             <button class="tab" onclick="switchTab('schedule')">⏰ Schedule</button>
             <button class="tab" onclick="switchTab('targets')">🎯 Targets</button>
+            <button class="tab" onclick="switchTab('records')">📋 Records</button>
         </div>
 
-        <!-- Orders Tab -->
         <div id="orders" class="tab-content active">
             <div class="info-box">
-                ℹ️ View all active orders. Auto-refresh every 3 seconds.
+                ℹ️ View all active orders. Data updates live.
             </div>
 
             <div class="card">
                 <div class="card-title">📦 Active Orders</div>
                 <div id="ordersContainer" class="loading">Loading orders...</div>
-                <button class="btn" onclick="loadOrders()">🔄 Refresh Now</button>
             </div>
         </div>
 
-        <!-- Schedule Tab -->
         <div id="schedule" class="tab-content">
             <div class="info-box">
                 ℹ️ Current work schedule.
@@ -245,11 +97,9 @@
             <div class="card">
                 <div class="card-title">⏰ Work Schedule</div>
                 <div id="scheduleContainer" class="loading">Loading schedule...</div>
-                <button class="btn" onclick="loadSchedule()">🔄 Refresh</button>
             </div>
         </div>
 
-        <!-- Targets Tab -->
         <div id="targets" class="tab-content">
             <div class="info-box">
                 ℹ️ Daily production targets.
@@ -258,12 +108,65 @@
             <div class="card">
                 <div class="card-title">🎯 Daily Targets</div>
                 <div id="targetsContainer" class="loading">Loading targets...</div>
-                <button class="btn" onclick="loadTargets()">🔄 Refresh</button>
+            </div>
+        </div>
+
+        <div id="records" class="tab-content">
+            <div class="info-box">
+                ℹ️ User Daily Work Log.
+            </div>
+
+            <div class="card">
+                <div class="card-title">➕ Add New Work Log</div>
+                <div class="input-group">
+                    <label>Item</label>
+                    <select id="recordItem">
+                        <option value="shrimp">🦐 ပုဇွန်</option>
+                        <option value="squid">🦑 ကင်းမွန်</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Quantity Processed (pieces)</label>
+                    <input type="number" id="recordQty" value="10" min="1">
+                </div>
+                <div class="input-group">
+                    <label>Action</label>
+                    <select id="recordAction">
+                        <option value="cleaning">Cleaning</option>
+                        <option value="packed">Packed</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="createRecord()">📝 Save Work Log</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📋 Work History</div>
+                <div id="recordsContainer" class="loading">Loading records...</div>
             </div>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Import Firebase Functions (v9 modular)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, query, where, onSnapshot, getDoc, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+        
+        // Firebase Configuration (from user input)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4ncNhlETbAgB5uFbEiXRON-3vhfneEV0",
+            authDomain: "seafood-oder.firebaseapp.com",
+            databaseURL: "https://seafood-oder-default-rtdb.firebaseio.com",
+            projectId: "seafood-oder",
+            storageBucket: "seafood-oder.firebasestorage.app",
+            messagingSenderId: "428949391732",
+            appId: "1:428949391732:web:908e851d89aff17365c421",
+            measurementId: "G-GNP9K51MCY"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // ========== UTILITY ==========
         function switchTab(name) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -272,105 +175,202 @@
             event.target.classList.add('active');
         }
 
-        // ========== READ ONLY ==========
-        function loadOrders() {
-            const container = document.getElementById('ordersContainer');
-            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+        // ========== LIVE ORDER DATA (READ-ONLY) ==========
+        let globalOrders = [];
 
-            if (orders.length === 0) {
-                container.innerHTML = '<div class="loading">No orders</div>';
+        function loadLiveOrders() {
+            const ordersRef = collection(db, "orders");
+            // Completed မဟုတ်သော Active Orders များကိုသာ ရယူရန် Query
+            const q = query(ordersRef, where("status", "!=", "completed"));
+
+            onSnapshot(q, (snapshot) => {
+                globalOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderOrders();
+                updateStats(); 
+            }, (error) => {
+                console.error("Error loading orders: ", error);
+                document.getElementById('ordersContainer').innerHTML = '<div class="loading">Error loading data.</div>';
+            });
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            if (globalOrders.length === 0) {
+                container.innerHTML = '<div class="loading">No active orders</div>';
                 return;
             }
 
             let html = '';
-            orders.forEach(order => {
+            globalOrders.forEach(order => {
                 const itemEmoji = order.item === 'shrimp' ? '🦐' : '🦑';
                 const itemName = order.item === 'shrimp' ? 'ပုဇွန်' : 'ကင်းမွန်';
 
+                // Firestore Document ID ကို #OrderID အဖြစ် ပြသခြင်း
                 html += `
                     <div class="order-item">
                         <div class="order-header">
-                            <div class="order-id">#${order.id}</div>
+                            <div class="order-id">#${order.id.substring(0, 8)}...</div> 
                             <span class="status-badge status-${order.status}">${order.status}</span>
                         </div>
                         <div>
-                            <strong>Customer:</strong> ${order.customer}<br>
+                            <strong>Customer:</strong> ${order.customer || 'N/A'}<br>
                             <strong>Item:</strong> ${itemEmoji} ${itemName} × ${order.quantity}<br>
-                            <strong>Created:</strong> ${order.createdAt}
+                            <strong>Created:</strong> ${order.createdAt || 'N/A'}
                         </div>
                     </div>
                 `;
             });
 
             container.innerHTML = html;
-            updateStats();
         }
 
-        function loadSchedule() {
+        // ========== LIVE SCHEDULE & TARGETS DATA (READ-ONLY) ==========
+
+        // Schedule
+        onSnapshot(doc(db, "schedule", "current"), (docSnap) => {
             const container = document.getElementById('scheduleContainer');
-            const schedule = JSON.parse(localStorage.getItem('schedule') || 'null');
-
-            if (!schedule) {
-                container.innerHTML = '<div class="loading">No schedule set</div>';
-                return;
+            if (docSnap.exists()) {
+                const schedule = docSnap.data();
+                container.innerHTML = `
+                    <div class="schedule-box">
+                        <div class="schedule-label">📍 Start Time</div>
+                        <div class="schedule-value">${schedule.start || 'N/A'}</div>
+                    </div>
+                    <div class="schedule-box">
+                        <div class="schedule-label">🏁 End Time</div>
+                        <div class="schedule-value">${schedule.end || 'N/A'}</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '<div class="loading">No schedule set by admin.</div>';
             }
+        });
 
-            const html = `
-                <div class="schedule-box">
-                    <div class="schedule-label">📍 Start Time</div>
-                    <div class="schedule-value">${schedule.start}</div>
-                </div>
-                <div class="schedule-box">
-                    <div class="schedule-label">🏁 End Time</div>
-                    <div class="schedule-value">${schedule.end}</div>
-                </div>
-            `;
-
-            container.innerHTML = html;
-        }
-
-        function loadTargets() {
+        // Targets
+        onSnapshot(doc(db, "targets", "daily"), (docSnap) => {
             const container = document.getElementById('targetsContainer');
-            const targets = JSON.parse(localStorage.getItem('targets') || 'null');
+            if (docSnap.exists()) {
+                const targets = docSnap.data();
+                container.innerHTML = `
+                    <div class="schedule-box">
+                        <div class="schedule-label">🦐 ပုဇွန် Target</div>
+                        <div class="schedule-value">${targets.shrimp || 0} pieces</div>
+                    </div>
+                    <div class="schedule-box">
+                        <div class="schedule-label">🦑 ကင်းမွန် Target</div>
+                        <div class="schedule-value">${targets.squid || 0} pieces</div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '<div class="loading">No targets set by admin.</div>';
+            }
+        });
 
-            if (!targets) {
-                container.innerHTML = '<div class="loading">No targets set</div>';
+        // ========== WORK LOG (RECORDS - CRUD) ==========
+
+        function createRecord() {
+            const item = document.getElementById('recordItem').value;
+            const qty = parseInt(document.getElementById('recordQty').value);
+            const action = document.getElementById('recordAction').value;
+
+            if (qty <= 0) {
+                alert('Quantity must be positive.');
                 return;
             }
 
-            const html = `
-                <div class="schedule-box">
-                    <div class="schedule-label">🦐 ပုဇွန်  Target</div>
-                    <div class="schedule-value">${targets.shrimp} pieces</div>
-                </div>
-                <div class="schedule-box">
-                    <div class="schedule-label">🦑 ကင်းမွန် Target</div>
-                    <div class="schedule-value">${targets.squid} pieces</div>
-                </div>
-            `;
+            const newRecord = {
+                item: item,
+                quantity: qty,
+                action: action,
+                // userId: "user_a", // လော့ဂ်အင်စနစ် ထည့်သွင်းပါက ဤနေရာတွင် ထည့်ပါ
+                createdAt: new Date().toLocaleString()
+            };
+
+            addDoc(collection(db, "records"), newRecord)
+            .then(() => {
+                alert('Work Log Saved!');
+                document.getElementById('recordQty').value = '10'; // Reset Qty
+            })
+            .catch(error => {
+                alert("Error saving record. Check Firestore Rules!");
+                console.error("Error adding document: ", error);
+            });
+        }
+
+        function deleteRecord(id) {
+            if (confirm('Delete this record entry?')) {
+                deleteDoc(doc(db, "records", id))
+                .then(() => {
+                    alert('Record Deleted!');
+                })
+                .catch(error => {
+                    alert("Error deleting record. Check Firestore Rules!");
+                    console.error("Error removing document: ", error);
+                });
+            }
+        }
+
+        // Live Records History
+        onSnapshot(collection(db, "records"), (snapshot) => {
+            const container = document.getElementById('recordsContainer');
+            const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+            if (records.length === 0) {
+                container.innerHTML = '<div class="loading">No work logs recorded yet.</div>';
+                return;
+            }
+
+            let html = '';
+            records.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Newest first
+
+            records.forEach(record => {
+                const itemEmoji = record.item === 'shrimp' ? '🦐' : '🦑';
+                const actionColor = record.action === 'cleaning' ? '#0E7490' : '#4338CA';
+
+                html += `
+                    <div class="record-item">
+                        <div style="font-size: 1.1rem; font-weight: bold; color: ${actionColor};">
+                            ${record.action.toUpperCase()}
+                        </div>
+                        <div style="margin-top: 0.5rem;">
+                            ${itemEmoji} ${record.quantity} pieces (${record.item})
+                        </div>
+                        <div style="font-size: 0.8rem; color: #64748B; margin-top: 0.5rem;">
+                            Logged on: ${record.createdAt}
+                        </div>
+                        <div class="record-actions">
+                            <button class="btn btn-delete" onclick="deleteRecord('${record.id}')">🗑️ Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
 
             container.innerHTML = html;
-        }
+        });
 
+
+        // ========== STATS ==========
         function updateStats() {
-            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
-            const active = orders.filter(o => o.status !== 'completed').length;
-            const comp = orders.filter(o => o.status === 'completed').length;
-
-            document.getElementById('totalOrders').textContent = orders.length;
-            document.getElementById('activeOrders').textContent = active;
-            document.getElementById('completed').textContent = comp;
+            // Firestore data ကို အခြေခံပြီး Total/Active/Completed ကို တွက်ချက်ရပါမယ်
+            const total = globalOrders.length;
+            const completed = 0; // Active order များကိုသာ ဆွဲထားသဖြင့် Completed ကို သီးခြား Query တစ်ခုဖြင့် ယူရမည်
+            
+            // Note: Completed Stat ကို မှန်ကန်စွာ ပြသနိုင်ဖို့အတွက် "orders" Collection အားလုံးကို ယူတဲ့ သီးခြား Query တစ်ခု ထပ်လိုအပ်ပါတယ်
+            
+            document.getElementById('totalOrders').textContent = total;
+            document.getElementById('activeOrders').textContent = total; // လက်ရှိဆွဲထားတာက active တွေပါ
+            document.getElementById('completed').textContent = completed;
         }
 
-        // Initialize
-        loadOrders();
-        loadSchedule();
-        loadTargets();
-        updateStats();
+        // Initialize Live Data Flow
+        loadLiveOrders();
+        // Stats ကို loadLiveOrders ထဲမှာ update လုပ်ထားပြီးပါပြီ
 
-        // Auto-refresh
-        setInterval(loadOrders, 3000);
-        setInterval(updateStats, 3000);
+        // Tab switching function ကို Global scope သို့ ရွှေ့ရန်
+        window.switchTab = switchTab;
+        window.createRecord = createRecord;
+        window.deleteRecord = deleteRecord;
+
     </script>
 </body>
 </html>
