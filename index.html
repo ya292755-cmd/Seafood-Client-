@@ -26,10 +26,10 @@
         .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
         .order-id { font-weight: 700; color: #10B981; }
         .status-badge { padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-        .status-cleaning { background: #FEF3C7; color: #92400E; }
+        .status-cleaning { background: #FEF3C7; color: #92400E; } /* Active/Default Status */
         .status-packed { background: #DBEAFE; color: #1E40AF; }
         .status-delivering { background: #E0E7FF; color: #4338CA; }
-        .status-completed { background: #D1FAE5; color: #065F46; }
+        .status-completed { background: #D1FAE5; color: #065F46; } /* completed status အတွက် */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .loading { text-align: center; padding: 2rem; color: #64748B; }
@@ -54,7 +54,8 @@
         <div class="header">
             <div class="header-title">👤 Seafood Oder</div>
             <div class="header-subtitle">📊 Live Data Viewer (Read/Write on Records)</div>
-        </div>
+            <div id="dateDisplay" style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.9;"></div>
+            </div>
 
         <div class="stats-grid">
             <div class="stat-box">
@@ -67,7 +68,7 @@
             </div>
             <div class="stat-box">
                 <div class="stat-number" id="completed">0</div>
-                <div class="stat-label">✅ Completed</div>
+                <div class="stat-label">✅ Completed (Count)</div>
             </div>
         </div>
 
@@ -80,11 +81,11 @@
 
         <div id="orders" class="tab-content active">
             <div class="info-box">
-                ℹ️ View all active orders. Data updates live.
+                ℹ️ View all orders. Completed orders are marked as COMPLETED.
             </div>
 
             <div class="card">
-                <div class="card-title">📦 Active Orders</div>
+                <div class="card-title">📦 All Orders</div>
                 <div id="ordersContainer" class="loading">Loading orders...</div>
             </div>
         </div>
@@ -176,41 +177,67 @@
         }
 
         // ========== LIVE ORDER DATA (READ-ONLY) ==========
-        let globalOrders = [];
+        let globalOrders = []; // All orders list (Active + Completed)
+        let allOrders = []; // This line remains but is no longer used for fetching.
 
+
+        // loadLiveOrders() ကို အော်ဒါအားလုံး (Active + Completed) ဆွဲယူဖို့ ပြင်ဆင်ခြင်း
         function loadLiveOrders() {
             const ordersRef = collection(db, "orders");
-            // Completed မဟုတ်သော Active Orders များကိုသာ ရယူရန် Query
-            const q = query(ordersRef, where("status", "!=", "completed"));
+            
+            // Query တွင် where clause ကို ဖြုတ်လိုက်သည်။
+            // ယခုအခါ Firebase က orders အားလုံးကို ဆွဲယူပြီး globalOrders တွင် ထားပါမည်။
+            const q = query(ordersRef); 
 
             onSnapshot(q, (snapshot) => {
+                // globalOrders တွင် Active, Completed အားလုံး ပါဝင်လာမည်
                 globalOrders = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                renderOrders();
-                updateStats(); 
+                renderOrders(); 
+                // Stats တွက်ချက်ခြင်းကို globalOrders ပေါ်မှာ အခြေခံပါမည်။
+                updateStatsFromGlobal(); // Stats ကို ချက်ချင်း Update လုပ်သည်
             }, (error) => {
                 console.error("Error loading orders: ", error);
                 document.getElementById('ordersContainer').innerHTML = '<div class="loading">Error loading data.</div>';
             });
         }
-
+        
+        // renderOrders() ကို Active Orders List အောက်မှာ အော်ဒါအားလုံး ပြသဖို့ ပြင်ဆင်ခြင်း
         function renderOrders() {
             const container = document.getElementById('ordersContainer');
+            // globalOrders သည် ယခုအခါ Active + Completed အားလုံးကို ကိုယ်စားပြုသည်။
             if (globalOrders.length === 0) {
-                container.innerHTML = '<div class="loading">No active orders</div>';
+                container.innerHTML = '<div class="loading">No orders found.</div>';
                 return;
             }
 
             let html = '';
+            // Newest first
+            globalOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
             globalOrders.forEach(order => {
+                // ကင်းမွန်/ပုဇွန် စာသားပြသမှု စစ်ဆေးခြင်း
                 const itemEmoji = order.item === 'shrimp' ? '🦐' : '🦑';
                 const itemName = order.item === 'shrimp' ? 'ပုဇွန်' : 'ကင်းမွန်';
+                
+                // Status Badge Color ကို 'completed' အတွက် status-completed အဖြစ် သတ်မှတ်ခြင်း
+                let statusClass;
+                if (order.status === 'completed') {
+                    statusClass = 'status-completed'; // Status ပြီးဆုံးကြောင်း ပြရန်
+                } else if (order.status === 'packed') {
+                    statusClass = 'status-packed';
+                } else if (order.status === 'delivering') {
+                    statusClass = 'status-delivering';
+                } else {
+                    // အခြား status တွေအတွက် အခြေခံ color ပေးရန် (e.g., cleaning)
+                    statusClass = 'status-cleaning'; 
+                }
 
                 // Firestore Document ID ကို #OrderID အဖြစ် ပြသခြင်း
                 html += `
                     <div class="order-item">
                         <div class="order-header">
                             <div class="order-id">#${order.id.substring(0, 8)}...</div> 
-                            <span class="status-badge status-${order.status}">${order.status}</span>
+                            <span class="status-badge ${statusClass}">${order.status.toUpperCase()}</span>
                         </div>
                         <div>
                             <strong>Customer:</strong> ${order.customer || 'N/A'}<br>
@@ -350,21 +377,51 @@
 
 
         // ========== STATS ==========
-        function updateStats() {
-            // Firestore data ကို အခြေခံပြီး Total/Active/Completed ကို တွက်ချက်ရပါမယ်
-            const total = globalOrders.length;
-            const completed = 0; // Active order များကိုသာ ဆွဲထားသဖြင့် Completed ကို သီးခြား Query တစ်ခုဖြင့် ယူရမည်
+        // updateStatsFromGlobal function: globalOrders ပေါ်တွင် အခြေခံပြီး Stats တွက်ချက်ခြင်း
+        function updateStatsFromGlobal() {
+            const total = globalOrders.length; 
             
-            // Note: Completed Stat ကို မှန်ကန်စွာ ပြသနိုင်ဖို့အတွက် "orders" Collection အားလုံးကို ယူတဲ့ သီးခြား Query တစ်ခု ထပ်လိုအပ်ပါတယ်
+            // Completed orders များ: status 'completed' ဖြစ်သော orders များကိုသာ ရေတွက်သည်
+            const completedOrders = globalOrders.filter(order => order.status === 'completed');
+            
+            // Completed orders ၏ အရေအတွက် (Count)
+            const completedCount = completedOrders.length;
+            
+            // Active orders များ: status 'completed' မဟုတ်သော orders များ (List တွင်မြင်ရမည့် Orders အစစ်)
+            const active = globalOrders.filter(order => order.status !== 'completed').length;
             
             document.getElementById('totalOrders').textContent = total;
-            document.getElementById('activeOrders').textContent = total; // လက်ရှိဆွဲထားတာက active တွေပါ
-            document.getElementById('completed').textContent = completed;
+            document.getElementById('activeOrders').textContent = active; // Active orders အရေအတွက်
+            document.getElementById('completed').textContent = completedCount; // Completed Count
+        }
+
+        // ========== DATE DISPLAY UTILITY ==========
+        function displayCurrentDate() {
+            const dateElement = document.getElementById('dateDisplay');
+            if (dateElement) {
+                const today = new Date();
+                
+                // ရက်စွဲအတွက်
+                const day = String(today.getDate()).padStart(2, '0');
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const year = today.getFullYear();
+                
+                // အချိန် (နာရီ၊ မိနစ်၊ စက္ကန့်) အတွက်
+                const hours = String(today.getHours()).padStart(2, '0');
+                const minutes = String(today.getMinutes()).padStart(2, '0');
+                const seconds = String(today.getSeconds()).padStart(2, '0');
+                
+                // ရက်/လ/နှစ် + နာရီ:မိနစ်:စက္ကန့် ပုံစံဖြင့် ပြသခြင်း
+                dateElement.textContent = `ယနေ့ရက်စွဲ: ${day}/${month}/${year} | အချိန်: ${hours}:${minutes}:${seconds}`;
+                
+                // 1 စက္ကန့်တိုင်း အချိန်ကို အလိုအလျောက် Update လုပ်ရန်
+                setTimeout(displayCurrentDate, 1000); 
+            }
         }
 
         // Initialize Live Data Flow
-        loadLiveOrders();
-        // Stats ကို loadLiveOrders ထဲမှာ update လုပ်ထားပြီးပါပြီ
+        loadLiveOrders(); // Orders အားလုံးကို ဆွဲယူပြီး List နှင့် Stats တွက်ချက်ရန်
+        displayCurrentDate(); // ယနေ့ရက်စွဲ ပြသရန်
 
         // Tab switching function ကို Global scope သို့ ရွှေ့ရန်
         window.switchTab = switchTab;
